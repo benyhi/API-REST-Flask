@@ -1,0 +1,46 @@
+{% extends 'base.html'%}
+{% block tittle %}<h4>Agregar un nuevo producto</h4>{% endblock %}
+{% block content %}
+<form action="POST">
+    <div>
+        <label for="nombre">Nombre</label>
+        <input type="text" name="nombre">
+    </div>
+    <div>
+        <label for="modelo">Modelo</label>
+        <select name="modelo">
+            {% for modelo in modelos %}
+            <option value="{{modelo.id}}">{{modelo.nombre}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label for="marca">Marca</label>
+        <select name="marca">
+            <option disabled selected>Selecciona una marca</option>
+            {% for marca in marcas %}
+            <option value="{{marca.id}}">{{marca.nombre}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label for="categoria">Categoria</label>
+        <select name="categoria">
+            <option disabled selected>Selecciona una categoria</option>
+            {% for categoria in categorias %}
+            <option value="{{categoria.id}}">{{categoria.nombre}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label for="costo">Costo</label>
+        <input type="number" name="costo">
+    </div>
+    <div>
+        <label for="cantidad_disponible">Cantidad disponible</label>
+        <input type="number" name="cantidad_disponible">
+    </div>
+</form>
+<button type="submit">Cargar producto</button>
+<a href="/productos">Cancelar</a>
+{%endblock%}

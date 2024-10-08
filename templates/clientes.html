@@ -1,0 +1,49 @@
+{% extends 'base.html'%}
+{% block tittle %}
+{% endblock %}
+{% block content %}
+<div>
+    <table>
+        <thead>
+            <th>Nombre</th>
+            <th>Sexo</th>
+            <th>Fecha Nacimiento</th>
+            <th>Estado civil</th>
+            <th>Tipo DNI</th>
+            <th>Numero documento</th>
+            <th>CUIT/CUIL</th>
+            <th>Pais</th>
+            <th>Provincia</th>
+            <th>Localidad</th>
+            <th>Condicion Fiscal</th>
+            <th>Telefono</th>
+            <th>Direccion</th>
+            <th>Correo</th>
+            <th>Estado</th>
+            <th>Fecha registro</th>
+        </thead>
+        <tbody>
+            {% for persona in personas %}
+            <td>{{persona.nombre}}</td>
+            <td>{{persona.sexo}}</td>
+            <td>{{persona.fecha_nacimiento}}</td>
+            <td>{{persona.estado_civil}}</td>
+            <td>{{persona.tipo_dni}}</td>
+            <td>{{persona.numero_documento}}</td>
+            <td>{{persona.cuit}}</td>
+            <td>{{persona.pais}}</td>
+            <td>{{persona.provincia}}</td>
+            <td>{{persona.localidad}}</td>
+            <td>{{persona.condicion_fiscal}}</td>
+            <td>{{persona.telefono}}</td>
+            <td>{{persona.direccion}}</td>
+            <td>{{persona.correo}}</td>
+            <td>{{persona.estado}}</td>
+            <td>{{persona.fecha_registro}}</td>
+            {%endfor%}
+        </tbody>
+    </table>
+</div>
+{%endblock%}
+
+
