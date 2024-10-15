@@ -1,0 +1,74 @@
+{% extends 'base.html'%}
+{% block tittle %}<h4>Productos</h4>{% endblock %}
+{% block content %}
+<div class="productos-container">
+    <div class="container-tabla">
+        <input type="text" name="" id="" placeholder="Buscar...">
+        <table class="table table-striped">
+            <thead>
+                <th>Nombre</th>
+                <th>Modelo</th>
+                <th>Precio</th>
+                <th>Cantidad disponible</th>
+                <th>Proveedor</th>
+                <th>Categoria</th>
+            </thead>
+            <tbody class="table-group-divider">
+                {% for producto, modelo, proveedor, categoria in productos %}
+                <tr>
+                    <td>{{producto.nombre}}</td>
+                    <td>{{modelo.nombre}}</td>
+                    <td>{{producto.precio}}</td>
+                    <td>{{producto.stock}}</td>
+                    <td>{{proveedor.nombre}}</td>
+                    <td>{{producto.categoria}}</td>
+                    <td><a href="{{ url_for('productos.editar_producto', id=producto.id) }}" class="btn btn-success">Editar</a></td>
+                    <td><a href="{{ url_for('productos.eliminar_producto', id=producto.id) }}" class="btn btn-danger">Eliminar</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="container-form form">
+        <form action="productos/crear" method="post">
+            <div>
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" name="nombre" id="nombre">
+            </div>
+            <div>
+                <label for="modelo" class="form-label">Modelo</label>
+                <select name="modelo" class="form-select" id="modelo">
+                    {% for producto, modelo, proveedor, categoria in productos %}
+                        <option value="{{modelo.id}}">{{modelo.nombre}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="precio" class="form-label">Precio</label>
+                <input type="number" class="form-control" name="precio" id="precio">
+            </div>
+            <div>
+                <label for="stock" class="form-label">Stock</label>
+                <input type="number" class="form-control" name="stock" id="stock">
+            </div>
+            <div>
+                <label for="proveedor" class="form-label">Proveedor</label>
+                <select name="proveedor" class="form-select" id="proveedor">
+                    {% for producto, modelo, proveedor, categoria in productos %}
+                    <option value="{{proveedor.id}}">{{proveedor.nombre}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="categoria" class="form-label">Categoria</label>
+                <select name="categoria" class="form-select" id="categoria">
+                    {% for producto, modelo, proveedor, categoria in productos %}
+                    <option value="{{categoria.id}}">{{categoria.nombre}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button class="btn btn-primary mt-3" type="submit">Agregar Producto</button>
+        </form>
+    </div>
+</div>
+{%endblock%}
