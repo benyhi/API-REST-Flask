@@ -1,0 +1,26 @@
+{% extends 'base.html'%}
+{% block tittle %}
+{% endblock %}
+{% block content %}
+<div>
+    <table>
+        <thead>
+            <th>Usuario</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>DNI</th>
+            <th>Telefono</th>
+            <th>Email</th>
+        </thead>
+        <tbody>
+            {% for cliente in clientes %}
+            <tr>
+                <td>{{cliente.usuario_id}}</td>
+            </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+</div>
+{%endblock%}
+
+

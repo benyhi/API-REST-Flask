@@ -1,0 +1,24 @@
+{% extends 'base.html'%}
+{% block tittle %} <h1>PROVEEDORES</h1> {% endblock %}
+{% block content %}
+<div>
+    <table>
+        <thead>
+            <th>Nombre</th>
+            <th>Telefono</th>
+            <th>Email</th>
+        </thead>
+        <tbody>
+            {% for proveedor in proveedores %}
+            <tr>
+                <td>{{proveedor.nombre}}</td>
+                <td>{{proveedor.telefono}}</td>
+                <td>{{proveedor.email}}</td>
+            </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+</div>
+{%endblock%}
+
+

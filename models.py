@@ -45,7 +45,7 @@ class Persona(db.Model):
 class Cliente(Persona):
     __tablename__ = 'cliente'
     id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
-    razon_social = db.Column(db.String(100), nullable=False)
+    usuario_id = db.Column(db.Integer)
 
 class Empleado(Persona):
     __tablename__ = 'empleado'

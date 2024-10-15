@@ -10,7 +10,6 @@ productos_bp = Blueprint('productos', __name__)
 def productos():
     lista = db.session.query(Producto, Modelo, Proveedor, Categoria).\
     join(Modelo, Producto.modelo_id == Modelo.id).join(Proveedor, Producto.proveedor_id == Proveedor.id).join(Categoria, Producto.categoria_id == Categoria.id).all()
-    print(lista)
     return render_template('productos/productos.html', productos=lista)
 
 @productos_bp.route("/productos/crear", methods=['POST'])
