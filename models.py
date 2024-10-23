@@ -40,16 +40,25 @@ class Persona(db.Model):
     __tablename__ = 'persona'
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(100), nullable=False)
-    apellido = db.Column(db.String(100), nullable=False)
     dni = db.Column(db.String(20), unique=True, nullable=False)
     telefono = db.Column(db.String(20))
     direccion = db.Column(db.String(100))
     email = db.Column(db.String(100), unique=True)
+    tipo = db.Column(db.String(50), nullable=False)
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'persona',
+        'polymorphic_on': tipo
+    }
 
 class Cliente(Persona):
     __tablename__ = 'cliente'
     id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
-    usuario_id = db.Column(db.Integer)
+    usuario_id = db.Column(db.Integer, nullable=False)
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'cliente',
+    }
 
 class Empleado(Persona):
     __tablename__ = 'empleado'
@@ -59,12 +68,16 @@ class Empleado(Persona):
 
     sucursal = db.relationship('Sucursal', back_populates='empleados')
 
+    __mapper_args__ = {
+        'polymorphic_identity': 'empleado',
+    }
+
 class Marca(db.Model):
     __tablename__ = 'marca'
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(100), nullable=False)
-    fabricante_id = db.Column(db.Integer, db.ForeignKey('fabricante.id'), nullable=False)
 
+    productos = db.relationship('Producto', back_populates='marca')
     modelos = db.relationship('Modelo', back_populates='marca')
 
 class Modelo(db.Model):
@@ -80,12 +93,14 @@ class Producto(db.Model):
     __tablename__ = 'producto'
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(100), nullable=False)
-    precio = db.Column(db.Float, nullable=False)
-    stock = db.Column(db.Integer, nullable=False)
+    precio = db.Column(db.Float)
+    stock = db.Column(db.Integer)
+    marca_id = db.Column(db.Integer, db.ForeignKey('marca.id'), nullable=False)
     modelo_id = db.Column(db.Integer, db.ForeignKey('modelo.id'), nullable=False)
     categoria_id = db.Column(db.Integer, db.ForeignKey('categoria.id'), nullable=False)
     proveedor_id = db.Column(db.Integer, db.ForeignKey('proveedor.id'), nullable=False)
 
+    marca = db.relationship('Marca', back_populates='productos')
     modelo = db.relationship('Modelo', back_populates='productos')
     categoria = db.relationship('Categoria', back_populates='productos')
     proveedor = db.relationship('Proveedor', back_populates='productos')
@@ -104,8 +119,12 @@ class Proveedor(Persona):
 
     productos = db.relationship('Producto', back_populates='proveedor')
 
-class Usuarios(db.Model):
+    __mapper_args__ = {
+        'polymorphic_identity': 'proveedor',
+    }
+
+class Usuario(db.Model):
     __tablename__ = 'usuario'
     id = db.Column(db.Integer, primary_key=True)
-    nombre_usuario = db.Column(db.String(50))
-    contrasena = db.Column(db.Int)
+    nombre_usuario = db.Column(db.String(50), nullable=False)
+    contrasena = db.Column(db.String(100), nullable=False)

@@ -1,0 +1,77 @@
+{% extends 'base.html'%}
+{% block tittle %}<h4>Productos</h4>{% endblock %}
+{% block content %}
+<div class="productos-container">
+    <div class="container-tabla">
+        <input type="text" name="" id="" placeholder="Buscar...">
+        <table class="table table-striped">
+            <thead>
+                <th>Nombre</th>
+                <th>DNI</th>
+                <th>Telefono</th>
+                <th>Direccion</th>
+                <th>Email</th>
+                <th>Cargo</th>
+                <th>Sucursal</th>
+            </thead>
+            <tbody class="table-group-divider">
+                {% for empleado in empleados %}
+                <tr>
+                    <td>{{empleado.nombre}}</td>
+                    <td>{{empleado.dni}}</td>
+                    <td>{{empleado.telefono}}</td>
+                    <td>{{empleado.direccion}}</td>
+                    <td>{{empleado.email}}</td>
+                    <td>{{empleado.cargo}}</td>
+                    <td>{{empleado.sucursal_id}}</td>
+                    <td><a href="{{ url_for('empleados.editar_empleado', id=persona.id) }}" class="btn btn-success">Editar</a></td>
+                    <td><a href="{{ url_for('empleados.eliminar_empleado', id=persona.id) }}" class="btn btn-danger">Eliminar</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="container-form form">
+        <form action="empleado/crear" method="post">
+            <div>
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" name="nombre" id="nombre">
+            </div>
+            <div>
+                <label for="dni" class="form-label">DNI</label>
+                <input type="number" class="form-control" name="dni" id="dni">
+            </div>
+            <div>
+                <label for="telefono" class="form-label">Telefono</label>
+                <input type="number" class="form-control" name="telefono" id="telefono">
+            </div>
+            <div>
+                <label for="direccion" class="form-label">Direccion</label>
+                <input type="text" class="form-control" name="direccion" id="direccion">
+            </div>
+            <div>
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" name="email" id="email">
+            </div>
+            <div>
+                <label for="cargo" class="form-label">Cargo</label>
+                <select name="cargo" class="form-select" id="cargo">
+                    <option value="gerente">Gerente</option>
+                    <option value="empleado">Empleado</option>
+                    <option value="vendedor">Vendedor</option>
+                    <option value="repartidor">Repartidor</option>
+                </select>
+            </div>
+            <div>
+                <label for="sucursal" class="form-label">Sucursal</label>
+                <select name="sucursal" class="form-select" id="sucursal">
+                    {% for sucursal in sucursales %}
+                        <option value="sucursal.id">{{ sucursal.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button class="btn btn-primary mt-3" type="submit">Agregar Empleado</button>
+        </form>
+    </div>
+</div>
+{%endblock%}
