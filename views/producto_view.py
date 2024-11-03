@@ -1,16 +1,24 @@
 from app import db
 from models import Producto, Modelo, Proveedor, Categoria
 from flask import Blueprint, render_template, redirect, url_for, request
+from schemas import ProductoSchema
+
 from sqlalchemy import exc
+
+from schemas import ClienteSchema
 
 productos_bp = Blueprint('productos', __name__)
 
 
 @productos_bp.route("/productos", methods=['GET'])
 def productos():
-    lista = db.session.query(Producto, Modelo, Proveedor, Categoria).\
-    join(Modelo, Producto.modelo_id == Modelo.id).join(Proveedor, Producto.proveedor_id == Proveedor.id).join(Categoria, Producto.categoria_id == Categoria.id).all()
-    return render_template('productos/productos.html', productos=lista)
+    lista = Producto.query.all()
+    # lista = db.session.query(Producto, Modelo, Proveedor, Categoria).\
+    # join(Modelo, Producto.modelo_id == Modelo.id).\
+    # join(Proveedor, Producto.proveedor_id == Proveedor.id).\
+    # join(Categoria, Producto.categoria_id == Categoria.id).all()
+    return ProductoSchema(many=True).dump(lista)
+    #render_template('productos/productos.html', productos=lista)
 
 @productos_bp.route("/productos/crear", methods=['POST'])
 def crear_producto():

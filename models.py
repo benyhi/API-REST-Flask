@@ -77,7 +77,6 @@ class Marca(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(100), nullable=False)
 
-    productos = db.relationship('Producto', back_populates='marca')
     modelos = db.relationship('Modelo', back_populates='marca')
 
 class Modelo(db.Model):
@@ -95,12 +94,10 @@ class Producto(db.Model):
     nombre = db.Column(db.String(100), nullable=False)
     precio = db.Column(db.Float)
     stock = db.Column(db.Integer)
-    marca_id = db.Column(db.Integer, db.ForeignKey('marca.id'), nullable=False)
     modelo_id = db.Column(db.Integer, db.ForeignKey('modelo.id'), nullable=False)
     categoria_id = db.Column(db.Integer, db.ForeignKey('categoria.id'), nullable=False)
     proveedor_id = db.Column(db.Integer, db.ForeignKey('proveedor.id'), nullable=False)
 
-    marca = db.relationship('Marca', back_populates='productos')
     modelo = db.relationship('Modelo', back_populates='productos')
     categoria = db.relationship('Categoria', back_populates='productos')
     proveedor = db.relationship('Proveedor', back_populates='productos')
@@ -117,14 +114,16 @@ class Proveedor(Persona):
     id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
     cuit = db.Column(db.Integer, unique=True)
 
-    productos = db.relationship('Producto', back_populates='proveedor')
-
     __mapper_args__ = {
         'polymorphic_identity': 'proveedor',
     }
+
+    productos = db.relationship('Producto', back_populates='proveedor')
 
 class Usuario(db.Model):
     __tablename__ = 'usuario'
     id = db.Column(db.Integer, primary_key=True)
     nombre_usuario = db.Column(db.String(50), nullable=False)
-    contrasena = db.Column(db.String(100), nullable=False)
+    contrasena_hash = db.Column(db.String(100), nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
+

@@ -3,7 +3,7 @@
 {% block content %}
 <div class="productos-container">
     <div class="container-tabla">
-        <input type="text" name="" id="" placeholder="Buscar...">
+        <input type="text" placeholder="Buscar...">
         <table class="table table-striped">
             <thead>
                 <th>Nombre</th>
@@ -15,7 +15,7 @@
                 <th>Sucursal</th>
             </thead>
             <tbody class="table-group-divider">
-                {% for empleado in empleados %}
+                {% for empleado, sucursal in empleados %}
                 <tr>
                     <td>{{empleado.nombre}}</td>
                     <td>{{empleado.dni}}</td>
@@ -23,16 +23,16 @@
                     <td>{{empleado.direccion}}</td>
                     <td>{{empleado.email}}</td>
                     <td>{{empleado.cargo}}</td>
-                    <td>{{empleado.sucursal_id}}</td>
-                    <td><a href="{{ url_for('empleados.editar_empleado', id=persona.id) }}" class="btn btn-success">Editar</a></td>
-                    <td><a href="{{ url_for('empleados.eliminar_empleado', id=persona.id) }}" class="btn btn-danger">Eliminar</a></td>
+                    <td>{{sucursal.nombre}}</td>
+                    <td><a href="{{ url_for('empleado.editar_empleado', id=empleado.id) }}" class="btn btn-success">Editar</a></td>
+                    <td><a href="{{ url_for('empleado.eliminar_empleado', id=empleado.id) }}" class="btn btn-danger">Eliminar</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
     <div class="container-form form">
-        <form action="empleado/crear" method="post">
+        <form action="empleados/crear", method="post">
             <div>
                 <label for="nombre" class="form-label">Nombre</label>
                 <input type="text" class="form-control" name="nombre" id="nombre">
@@ -66,7 +66,7 @@
                 <label for="sucursal" class="form-label">Sucursal</label>
                 <select name="sucursal" class="form-select" id="sucursal">
                     {% for sucursal in sucursales %}
-                        <option value="sucursal.id">{{ sucursal.nombre }}</option>
+                        <option value={{ sucursal.id }}>{{ sucursal.nombre }}</option>
                     {% endfor %}
                 </select>
             </div>

@@ -1,0 +1,48 @@
+{% extends 'base.html'%}
+{% block tittle %}
+{% endblock %}
+{% block content %}
+<div class="container-form container">
+    <form action="{{ url_for('empleado.editar_empleado', id=empleado.id) }}" method="post">
+        <div>
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" name="nombre" id="nombre" value={{ empleado.nombre }}>
+        </div>
+        <div>
+            <label for="dni" class="form-label">DNI</label>
+            <input type="number" class="form-control" name="dni" id="dni" value={{ empleado.dni }}>
+        </div>
+        <div>
+            <label for="telefono" class="form-label">Telefono</label>
+            <input type="number" class="form-control" name="telefono" id="telefono" value={{ empleado.telefono }}>
+        </div>
+        <div>
+            <label for="direccion" class="form-label">Direccion</label>
+            <input type="text" class="form-control" name="direccion" id="direccion" value={{ empleado.direccion }}>
+        </div>
+        <div>
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" name="email" id="email" value={{ empleado.email }}>
+        </div>
+        <div>
+            <label for="cargo" class="form-label">Cargo</label>
+            <select name="cargo" class="form-select" id="cargo">
+                <option>{{ empleado.cargo }}</option>
+                <option value="gerente">Gerente</option>
+                <option value="empleado">Empleado</option>
+                <option value="vendedor">Vendedor</option>
+                <option value="repartidor">Repartidor</option>
+            </select>
+        </div>
+        <div>
+            <label for="sucursal" class="form-label">Sucursal</label>
+            <select name="sucursal" class="form-select" id="sucursal">
+                {% for sucursal in sucursales %}
+                    <option value="sucursal.id">{{ sucursal.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button class="btn btn-primary mt-3" type="submit">Agregar Empleado</button>
+    </form>
+</div>
+{%endblock%}
