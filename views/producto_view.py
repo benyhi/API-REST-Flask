@@ -1,7 +1,7 @@
 from app import db
 from models import Producto, Modelo, Proveedor, Categoria
 from flask import Blueprint, render_template, redirect, url_for, request
-from schemas import ProductoSchema
+from schemas import ProductoSchema, ModeloSchema, ProveedorSchema, CategoriaSchema
 
 from sqlalchemy import exc
 
@@ -12,13 +12,18 @@ productos_bp = Blueprint('productos', __name__)
 
 @productos_bp.route("/productos", methods=['GET'])
 def productos():
-    lista = Producto.query.all()
-    # lista = db.session.query(Producto, Modelo, Proveedor, Categoria).\
-    # join(Modelo, Producto.modelo_id == Modelo.id).\
-    # join(Proveedor, Producto.proveedor_id == Proveedor.id).\
-    # join(Categoria, Producto.categoria_id == Categoria.id).all()
-    return ProductoSchema(many=True).dump(lista)
-    #render_template('productos/productos.html', productos=lista)
+
+    productos = Producto.query.all()
+    modelos = Modelo.query.all()
+    proveedor = Proveedor.query.all()
+    categoria = Categoria.query.all()
+
+    modelos_serializer = ModeloSchema(many=True).dump(modelos)
+    proveedor_serializer = ProveedorSchema(many=True).dump(proveedor)
+    categoria_serializer = CategoriaSchema(many=True).dump(categoria)
+    productos_serializer = ProductoSchema(many=True).dump(productos)
+
+    return render_template('productos/productos.html', productos=productos_serializer, modelos=modelos_serializer, proveedores=proveedor_serializer, categorias=categoria_serializer)
 
 @productos_bp.route("/productos/crear", methods=['POST'])
 def crear_producto():
@@ -55,12 +60,18 @@ def crear_producto():
 @productos_bp.route("/productos/editar/<int:id>", methods=['GET','POST'])
 def editar_producto(id):
         producto = Producto.query.filter_by(id=id).first()
+        producto_serializer = ProductoSchema().dump(producto)
 
         if request.method == 'GET':
             modelos = Modelo.query.all()
-            categorias = Categoria.query.all()
             proveedores = Proveedor.query.all()
-            return render_template('productos/editar_producto.html', modelos=modelos, categorias=categorias, proveedores=proveedores, producto=producto)
+            categorias = Categoria.query.all()
+
+            modelos_serializer = ModeloSchema(many=True).dump(modelos)
+            proveedor_serializer = ProveedorSchema(many=True).dump(proveedores)
+            categoria_serializer = CategoriaSchema(many=True).dump(categorias)
+
+            return render_template('productos/editar_producto.html', modelos=modelos_serializer, categorias=categoria_serializer, proveedores=proveedor_serializer, producto=producto_serializer)
 
         else:
             producto.nombre = request.form.get('nombre')

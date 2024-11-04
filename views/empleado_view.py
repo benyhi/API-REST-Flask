@@ -6,14 +6,20 @@ from app import db
 from models import Empleado, Sucursal
 from flask import Blueprint, render_template, redirect, url_for, request
 
+from schemas import EmpleadoSchema, SucursalSchema
+
 empleado_bp = Blueprint('empleado', __name__)
 
 
 @empleado_bp.route("/empleados", methods=['GET', 'POST'])
 def empleado():
-    empleados = db.session.query(Empleado, Sucursal).join(Sucursal, Empleado.sucursal_id == Sucursal.id).all()
+    empleados = Empleado.query.all()
     sucursal = Sucursal.query.all()
-    return render_template('empleados/empleados.html', empleados=empleados, sucursales=sucursal)
+
+    empleados_serializer = EmpleadoSchema(many=True).dump(empleados)
+    sucursal_serializer = SucursalSchema(many=True).dump(sucursal)
+
+    return render_template('empleados/empleados.html', empleados=empleados_serializer, sucursales=sucursal_serializer)
 
 
 @empleado_bp.route("/empleados/crear", methods=['POST'])
@@ -54,10 +60,11 @@ def crear_empleado():
 @empleado_bp.route("/empleados/editar/<int:id>", methods=['GET','POST'])
 def editar_empleado(id):
     empleado = Empleado.query.filter_by(id=id).first()
-
+    empleado_serializer = EmpleadoSchema().dump(empleado)
     if request.method == 'GET':
         sucursales = Sucursal.query.all()
-        return render_template('empleados/editar_empleado.html', empleado=empleado, sucursales=sucursales)
+        sucursales_serializer = SucursalSchema(many=True).dump(sucursales)
+        return render_template('empleados/editar_empleado.html', empleado=empleado_serializer, sucursales=sucursales_serializer)
 
     else:
         empleado.nombre = request.form.get('nombre')

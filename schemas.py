@@ -1,3 +1,4 @@
+from marshmallow_sqlalchemy import auto_field
 from wtforms.validators import length
 
 from app import ma
@@ -28,6 +29,7 @@ class SucursalSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Sucursal
 
+    id = ma.auto_field()
     nombre = ma.auto_field()
     direccion = ma.auto_field()
     localidad_id = ma.Nested(LocalidadSchema)
@@ -36,12 +38,14 @@ class MarcaSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Marca
 
+    id = ma.auto_field()
     nombre = ma.auto_field()
 
 class ModeloSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Modelo
 
+    id = ma.auto_field()
     nombre = ma.auto_field()
     marca_id = ma.Nested(MarcaSchema)
 
@@ -49,6 +53,7 @@ class CategoriaSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Categoria
 
+    id = ma.auto_field()
     nombre = ma.auto_field()
 
 class PersonaSchema(ma.SQLAlchemySchema):
@@ -80,16 +85,22 @@ class ClienteSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Cliente
 
-    id = ma.Nested(PersonaSchema)
-    usuario_id = ma.Nested(UsuarioSchema)
+    id = ma.auto_field()
+    nombre = ma.auto_field()
+    dni = ma.auto_field()
+    direccion = ma.auto_field()
+    telefono = ma.auto_field()
+    email = ma.auto_field()
+    usuario_id = ma.Nested(UsuarioSchema, only=('nombre_usuario',))
 
 class EmpleadoSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Empleado
 
-    id = ma.Nested(PersonaSchema)
+    id = auto_field()
     nombre = ma.auto_field()
-    sucursal_id = ma.Nested(SucursalSchema)
+    dni = ma.auto_field()
+    sucursal_id = ma.Nested(SucursalSchema, only=('id','nombre'))
     cargo = ma.auto_field()
 
 class ProveedorSchema(ma.SQLAlchemySchema):
@@ -97,7 +108,10 @@ class ProveedorSchema(ma.SQLAlchemySchema):
         model = Proveedor
 
     id = ma.auto_field()
+    nombre = ma.auto_field()
     cuit = ma.auto_field()
+    telefono = ma.auto_field()
+    email = ma.auto_field()
 
     @validates('cuit')
     def validate_cuit(self, value):
@@ -114,9 +128,9 @@ class ProductoSchema(ma.SQLAlchemySchema):
     nombre = ma.auto_field()
     precio = ma.auto_field()
     stock = ma.auto_field()
-    modelo_id = ma.Nested(ModeloSchema, only=('nombre',))
-    categoria_id = ma.Nested(CategoriaSchema, only=('nombre',))
-    proveedor_id = ma.Nested(ProveedorSchema, only=('id',))
+    modelo = ma.Nested(ModeloSchema, only=('id','nombre'))
+    categoria = ma.Nested(CategoriaSchema, only=('id','nombre'))
+    proveedor = ma.Nested(ProveedorSchema, only=('id','nombre'))
 
 
 
