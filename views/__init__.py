@@ -1,3 +1,4 @@
+from .auth_view import auth_bp
 from .empleado_view import empleado_bp
 from .producto_view import productos_bp
 from .cliente_view import clientes_bp
@@ -10,3 +11,4 @@ def register_blueprint(app):
     app.register_blueprint(main_bp)
     app.register_blueprint(proveedor_bp)
     app.register_blueprint(empleado_bp)
+    app.register_blueprint(auth_bp)

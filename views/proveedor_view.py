@@ -2,7 +2,7 @@ from urllib import request
 
 from app import db
 from models import Proveedor
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, jsonify
 
 from schemas import ProveedorSchema
 
@@ -11,8 +11,7 @@ proveedor_bp = Blueprint('proveedores', __name__)
 @proveedor_bp.route("/proveedores")
 def proveedores():
     proveedores = db.session.query(Proveedor).all()
-    proveedores_serializer = ProveedorSchema(many=True).dump(proveedores)
-    return render_template('proveedores/proveedores.html', proveedores=proveedores_serializer)
+    return jsonify({'proveedores': ProveedorSchema(many=True).dump(proveedores)})
 
 @proveedor_bp.route("/proveedores/crear")
 def proveedores_crear():

@@ -4,7 +4,7 @@ from sqlalchemy import except_
 
 from app import db
 from models import Empleado, Sucursal
-from flask import Blueprint, render_template, redirect, url_for, request
+from flask import Blueprint, render_template, redirect, url_for, request, jsonify
 
 from schemas import EmpleadoSchema, SucursalSchema
 
@@ -15,11 +15,10 @@ empleado_bp = Blueprint('empleado', __name__)
 def empleado():
     empleados = Empleado.query.all()
     sucursal = Sucursal.query.all()
-
-    empleados_serializer = EmpleadoSchema(many=True).dump(empleados)
-    sucursal_serializer = SucursalSchema(many=True).dump(sucursal)
-
-    return render_template('empleados/empleados.html', empleados=empleados_serializer, sucursales=sucursal_serializer)
+    return jsonify({
+        'empleados': EmpleadoSchema(many=True).dump(empleados),
+        'sucursales': SucursalSchema(many=True).dump(sucursal)
+    })
 
 
 @empleado_bp.route("/empleados/crear", methods=['POST'])

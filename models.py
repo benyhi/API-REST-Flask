@@ -126,4 +126,3 @@ class Usuario(db.Model):
     nombre_usuario = db.Column(db.String(50), nullable=False)
     contrasena_hash = db.Column(db.String(100), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
-

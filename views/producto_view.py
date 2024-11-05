@@ -1,6 +1,6 @@
 from app import db
 from models import Producto, Modelo, Proveedor, Categoria
-from flask import Blueprint, render_template, redirect, url_for, request
+from flask import Blueprint, render_template, redirect, url_for, request, jsonify
 from schemas import ProductoSchema, ModeloSchema, ProveedorSchema, CategoriaSchema
 
 from sqlalchemy import exc
@@ -12,18 +12,16 @@ productos_bp = Blueprint('productos', __name__)
 
 @productos_bp.route("/productos", methods=['GET'])
 def productos():
-
     productos = Producto.query.all()
     modelos = Modelo.query.all()
     proveedor = Proveedor.query.all()
     categoria = Categoria.query.all()
-
-    modelos_serializer = ModeloSchema(many=True).dump(modelos)
-    proveedor_serializer = ProveedorSchema(many=True).dump(proveedor)
-    categoria_serializer = CategoriaSchema(many=True).dump(categoria)
-    productos_serializer = ProductoSchema(many=True).dump(productos)
-
-    return render_template('productos/productos.html', productos=productos_serializer, modelos=modelos_serializer, proveedores=proveedor_serializer, categorias=categoria_serializer)
+    return jsonify({
+        "modelos": ModeloSchema(many=True).dump(modelos), 
+        "proveedores":ProveedorSchema(many=True).dump(proveedor), 
+        "categorias":CategoriaSchema(many=True).dump(categoria), 
+        "productos":ProductoSchema(many=True).dump(productos)
+        })
 
 @productos_bp.route("/productos/crear", methods=['POST'])
 def crear_producto():

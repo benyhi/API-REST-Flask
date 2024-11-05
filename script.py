@@ -1,5 +1,6 @@
-from app import db
-from models import Pais, Provincia, Localidad, Sucursal, Cliente, Empleado, Producto, Marca, Proveedor, Fabricante, Modelo
+from werkzeug.security import generate_password_hash
+from app import app,db
+from models import Usuario,Pais, Provincia, Localidad, Sucursal, Cliente, Empleado, Producto, Marca, Proveedor, Modelo
 
 def poblar_bd():
     # Crear países
@@ -30,15 +31,10 @@ def poblar_bd():
     sucursal_copacabana = Sucursal(nombre='Sucursal Copacabana', direccion='Rua Bonita 321', localidad=copacabana)
     sucursal_santiago = Sucursal(nombre='Sucursal Santiago', direccion='Calle Chile 654', localidad=santiago_centro)
 
-    # Crear fabricantes con claves foráneas de país
-    fabricante_sony = Fabricante(nombre='Sony', pais=argentina)
-    fabricante_samsung = Fabricante(nombre='Samsung', pais=brasil)
-    fabricante_lg = Fabricante(nombre='LG', pais=chile)
-    
     # Crear marcas con claves foráneas de fabricante
-    marca_sony = Marca(nombre='Sony', fabricante=fabricante_sony)
-    marca_samsung = Marca(nombre='Samsung', fabricante=fabricante_samsung)
-    marca_lg = Marca(nombre='LG', fabricante=fabricante_lg)
+    marca_sony = Marca(nombre='Sony')
+    marca_samsung = Marca(nombre='Samsung')
+    marca_lg = Marca(nombre='LG')
 
     # Crear modelos con claves foráneas de marca
     modelo_playstation = Modelo(nombre='PlayStation 5', marca=marca_sony)
@@ -80,5 +76,20 @@ def poblar_bd():
     db.session.commit()
     print("Más entradas creadas con éxito.")
 
+def primer_usuario():
+    with app.app_context():
+        if Usuario.query.filter_by(nombre_usuario="admin").first():
+            print("El usuario admin ya existe.")
+
+        else:
+            primer_usuario = Usuario(
+                nombre_usuario = "admin",
+                contrasena_hash = generate_password_hash("admin"),
+                is_admin = True,
+            )
+            db.session.add(primer_usuario)
+            db.session.commit()
+            db.session.close()
+
 if __name__ == "__main__":
-    poblar_bd()
+    primer_usuario()

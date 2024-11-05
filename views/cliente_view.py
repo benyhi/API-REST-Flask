@@ -1,6 +1,6 @@
 from app import db
 from models import Cliente
-from flask import Blueprint, render_template, redirect, url_for, request
+from flask import Blueprint, render_template, redirect, url_for, request, jsonify
 
 from schemas import ClienteSchema
 
@@ -9,9 +9,7 @@ clientes_bp = Blueprint('clientes', __name__)
 @clientes_bp.route("/clientes", methods=["GET"])
 def clientes():
     clientes = Cliente.query.all()
-    clientes_serializer = ClienteSchema(many=True).dump(clientes)
-
-    return render_template('clientes/clientes.html', clientes=clientes_serializer)
+    return jsonify(ClienteSchema(many=True).dump(clientes))
 
 @clientes_bp.route("/clientes/crear", methods=['POST'])
 def crear_cliente():
