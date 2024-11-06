@@ -42,7 +42,6 @@ def login():
 @jwt_required()
 def usuarios():
     data_jwt = get_jwt()
-    print(data_jwt)
     administrador = data_jwt.get('is_admin')
 
     if request.method == 'POST':
@@ -74,3 +73,18 @@ def usuarios():
             return jsonify(usuarios_serializer)
         else:
             return jsonify({'Mensaje':'No tienes permisos para hacer esta solicitud.'})
+
+@auth_bp.route('/usuarios/eliminar/<int:id>', methods=['DELETE'])
+@jwt_required()
+def usuarios(id):
+    data_jwt = get_jwt()
+    administrador = data_jwt.get('is_admin')
+
+    if administrador is True:
+        usuario = Usuario.query.filter_by(id=id).first()
+        db.session.delete(usuario)
+        db.session.commit()
+        return jsonify({'Mensaje':'Usuario eliminado exitosamente'})
+
+    else:
+        jsonify({"Mensaje":"Tiene que ser admin para hacer esta solicitud."})

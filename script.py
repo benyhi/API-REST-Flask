@@ -1,6 +1,7 @@
 from werkzeug.security import generate_password_hash
 from app import app,db
-from models import Usuario,Pais, Provincia, Localidad, Sucursal, Cliente, Empleado, Producto, Marca, Proveedor, Modelo
+from models import Usuario, Pais, Provincia, Localidad, Sucursal, Cliente, Empleado, Producto, Marca, Proveedor, Modelo, Categoria
+
 
 def poblar_bd():
     # Crear países
@@ -31,25 +32,30 @@ def poblar_bd():
     sucursal_copacabana = Sucursal(nombre='Sucursal Copacabana', direccion='Rua Bonita 321', localidad=copacabana)
     sucursal_santiago = Sucursal(nombre='Sucursal Santiago', direccion='Calle Chile 654', localidad=santiago_centro)
 
-    # Crear marcas con claves foráneas de fabricante
-    marca_sony = Marca(nombre='Sony')
-    marca_samsung = Marca(nombre='Samsung')
-    marca_lg = Marca(nombre='LG')
+    # Crear categoria
+    categoria_A = Categoria(nombre='Categoria A')
+    categoria_B = Categoria(nomre='Categoria B')
+    categoria_C = Categoria(nombre='Categoria C')
+
+    # Crear marcas
+    marca_A = Marca(nombre='Marca A')
+    marca_B = Marca(nombre='Marca B')
+    marca_C = Marca(nombre='Marca C')
 
     # Crear modelos con claves foráneas de marca
-    modelo_playstation = Modelo(nombre='PlayStation 5', marca=marca_sony)
-    modelo_galaxy = Modelo(nombre='Galaxy S21', marca=marca_samsung)
-    modelo_oled_tv = Modelo(nombre='OLED TV', marca=marca_lg)
+    modelo_A = Modelo(nombre='Modelo A', marca=marca_A)
+    modelo_B = Modelo(nombre='Modelo B', marca=marca_B)
+    modelo_C = Modelo(nombre='Modelo C', marca=marca_C)
 
     # Crear proveedores
-    proveedor_tech_store = Proveedor(nombre='Tech Store', telefono='123456789', email='tech@store.com')
-    proveedor_mobile_shop = Proveedor(nombre='Mobile Shop', telefono='987654321', email='mobile@shop.com')
-    proveedor_home_appliances = Proveedor(nombre='Home Appliances', telefono='112233445', email='home@appliances.com')
+    proveedor_1 = Proveedor(nombre='Proveedor 1', telefono='123456789', email='proveedor1@email.com', dni='123456789', cuit='201234567893')
+    proveedor_2 = Proveedor(nombre='Proveedor 2', telefono='123456789', email='proveedor2@email.com', dni='53453489', cuit='2016456233893')
+    proveedor_3 = Proveedor(nombre='Proveedor 3', telefono='123456789', email='proveedor3@email.com', dni='53453456789', cuit='2546456547893')
 
-    # Crear productos con claves foráneas de modelo y proveedor
-    producto_ps5 = Producto(nombre='PlayStation 5', modelo=modelo_playstation, precio=500.0, stock=10, proveedor=proveedor_tech_store)
-    producto_galaxy = Producto(nombre='Galaxy S21', modelo=modelo_galaxy, precio=800.0, stock=5, proveedor=proveedor_mobile_shop)
-    producto_oled_tv = Producto(nombre='OLED TV', modelo=modelo_oled_tv, precio=1500.0, stock=8, proveedor=proveedor_home_appliances)
+    # Crear productos con claves foráneas de modelo, categoria y proveedor
+    producto_1 = Producto(nombre='Producto 1', modelo=modelo_A, categoria=categoria_A,precio=500, stock=10, proveedor=proveedor_1)
+    producto_2 = Producto(nombre='Producto 2', modelo=modelo_B, categoria=categoria_B, precio=800, stock=5, proveedor=proveedor_2)
+    producto_3 = Producto(nombre='Producto 3', modelo=modelo_C, categoria=categoria_C,precio=1500, stock=8, proveedor=proveedor_3)
 
     # Crear clientes que heredan de Persona
     cliente_juan = Cliente(nombre='Juan', apellido='Perez', dni='12345678', telefono='111222333', email='juan@correo.com')
@@ -67,14 +73,15 @@ def poblar_bd():
     db.session.add_all([argentina, brasil, chile, buenos_aires, cordoba, sao_paulo, rio_de_janeiro, santiago,
                         tigre, la_plata, cordoba_capital, campinas, copacabana, santiago_centro, sucursal_tigre,
                         sucursal_la_plata, sucursal_cordoba, sucursal_campinas, sucursal_copacabana, sucursal_santiago,
-                        fabricante_sony, fabricante_samsung, fabricante_lg, marca_sony, marca_samsung, marca_lg,
-                        modelo_playstation, modelo_galaxy, modelo_oled_tv, producto_ps5, producto_galaxy, producto_oled_tv,
-                        proveedor_tech_store, proveedor_mobile_shop, proveedor_home_appliances, cliente_juan, cliente_maria,
+                        marca_A, marca_B, marca_C, categoria_A, categoria_B, categoria_C,
+                        modelo_A, modelo_B, modelo_C, producto_1, producto_2, producto_3,
+                        proveedor_1, proveedor_2, proveedor_3, cliente_juan, cliente_maria,
                         cliente_pablo, cliente_lucia, empleado_carlos, empleado_ana, empleado_roberto, empleado_luisa])
 
     # Confirmar cambios
     db.session.commit()
-    print("Más entradas creadas con éxito.")
+    db.session.close()
+    print("Base de dato poblada con exito.")
 
 def primer_usuario():
     with app.app_context():
@@ -94,4 +101,6 @@ def primer_usuario():
             db.session.close()
 
 if __name__ == "__main__":
+    poblar_bd()
     primer_usuario()
+

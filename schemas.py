@@ -46,7 +46,7 @@ class ModeloSchema(ma.SQLAlchemySchema):
 
     id = ma.auto_field()
     nombre = ma.auto_field()
-    marca_id = ma.Nested(MarcaSchema)
+    marca = ma.Nested(MarcaSchema, only=('id','nombre'))
 
 class CategoriaSchema(ma.SQLAlchemySchema):
     class Meta:
@@ -107,6 +107,7 @@ class ProveedorSchema(ma.SQLAlchemySchema):
 
     id = ma.auto_field()
     nombre = ma.auto_field()
+    dni = ma.auto_field()
     cuit = ma.auto_field()
     telefono = ma.auto_field()
     email = ma.auto_field()
