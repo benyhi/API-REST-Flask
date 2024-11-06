@@ -31,7 +31,7 @@ Este script es necesario para poblar la base de datos y crear el primer usuario 
 ## Productos
 ### Consultar productos
 * Metodo: GET
-* Endpoint: /productos
+* Endpoint: ```/productos```
 * Ejemplo respuesta:
 ```json
 "categorias": [
@@ -71,7 +71,7 @@ Este script es necesario para poblar la base de datos y crear el primer usuario 
 
 ### Crear un producto
 * Metodo: POST
-* Endpoint: /productos/crear
+* Endpoint: ```/productos/crear```
 * Ejemplo de solicitud:
 ```json
 {
@@ -92,7 +92,7 @@ Este script es necesario para poblar la base de datos y crear el primer usuario 
 
 ### Editar un producto
 * Metodo: POST
-* Endpoint: /clientes/editar/<id_cliente>
+* Endpoint: ```/clientes/editar/<id_cliente>```
 * Ejemplo solicitud
 ```json
 {
@@ -113,7 +113,7 @@ Este script es necesario para poblar la base de datos y crear el primer usuario 
 
 ### Eliminar un producto
 * Metodo: POST
-* Endpoint: /productos/eliminar/<id_producto>
+* Endpoint: ```/productos/eliminar/<id_producto>```
 * Respuesta esperada:
 ```json
 {
@@ -141,15 +141,15 @@ Este script es necesario para poblar la base de datos y crear el primer usuario 
 
 ### Crear un cliente 
 * Metodo: POST
-* Endpoint: /clientes/crear
+* Endpoint: ```/clientes/crear```
 * Ejemplo de solicitud:
 ```json
 {
 "nombre": "nuevo_cliente",
-"dni": 2312553453,
-"telefono": 343531531,
-"email": cliente@cliente.com,
-"direccion": direccion 2
+"dni": "2312553453",
+"telefono": "343531531",
+"email": "cliente@cliente.com",
+"direccion": "direccion 2"
 }
 ```
 * Respuesta esperada:
@@ -161,15 +161,15 @@ Este script es necesario para poblar la base de datos y crear el primer usuario 
 
 ### Editar un cliente
 * Metodo: POST
-* Endpoint: /clientes/editar/<id_cliente>
+* Endpoint: ```/clientes/editar/<id_cliente>```
 * Ejemplo solicitud
 ```json
 {
 "nombre": "nuevo_nombre",
-"dni": 23123535,
-"telefono": 343534634631,
-"email": cliente1@cliente1.com,
-"direccion": direccion 3
+"dni": "23123535",
+"telefono": "343534634631",
+"email": "cliente1@cliente1.com",
+"direccion": "direccion 3"
 }
 ```
 * Respuesta esperada:
@@ -181,7 +181,7 @@ Este script es necesario para poblar la base de datos y crear el primer usuario 
 
 ### Eliminar un cliente
 * Metodo: POST
-* Endpoint: /clientes/eliminar/<id_cliente>
+* Endpoint: ```/clientes/eliminar/<id_cliente>```
 * Respuesta esperada:
 ```json
 {
@@ -192,7 +192,7 @@ Este script es necesario para poblar la base de datos y crear el primer usuario 
 ## Empleados
 ### Consultar empleados
 * Metodo: GET
-* Endpoint: /empleados
+* Endpoint: ```/empleados```
 * Ejemplo respuesta:
 ```json
 "empleados": [
@@ -213,7 +213,7 @@ Este script es necesario para poblar la base de datos y crear el primer usuario 
 
 ### Crear un empleado
 * Metodo: POST
-* Endpoint: /empleados/crear
+* Endpoint: ```/empleados/crear```
 * Ejemplo de solicitud:
 ```json
    {
@@ -235,7 +235,7 @@ Este script es necesario para poblar la base de datos y crear el primer usuario 
 
 ### Editar un empleado
 * Metodo: POST
-* Endpoint: /empleado/editar/<id_empleado>
+* Endpoint: ```/empleado/editar/<id_empleado>```
 * Ejemplo solicitud
 ```json
    {
@@ -257,7 +257,7 @@ Este script es necesario para poblar la base de datos y crear el primer usuario 
 
 ### Eliminar un empleado
 * Metodo: POST
-* Endpoint: /empleado/eliminar/<id_empleado>
+* Endpoint: ```/empleado/eliminar/<id_empleado>```
 * Respuesta esperada:
 ```json
 {
@@ -268,29 +268,29 @@ Este script es necesario para poblar la base de datos y crear el primer usuario 
 ## Proveedores
 ### Consultar proveedores
 * Metodo: GET
-* Endpoint: /proveedores
+* Endpoint: ```/proveedores```
 * Ejemplo respuesta:
 ```json
 "proveedores": [
         {
-            "cuit": 216578363,
-            "dni": 32132321,
+            "cuit": "216578363",
+            "dni": "32132321",
             "email": "elena.castro@example.com",
             "id": 24,
             "nombre": "Elena Castro",
-            "telefono": "852-741-9630,
+            "telefono": "852-741-9630",
             "direccion": "direccion 1"
         },
 ```
 
 ### Crear un proveedor
 * Metodo: POST
-* Endpoint: /proveedores/crear
+* Endpoint: ```/proveedores/crear```
 * Ejemplo de solicitud:
 ```json
     {
-        "cuit": 2543543,
-        "dni": 32132321,
+        "cuit": "2543543",
+        "dni": "32132321",
         "email": "proveedor@example.com",
         "nombre": "Elena Castro",
         "telefono": "852-741-9630"
@@ -306,7 +306,7 @@ Este script es necesario para poblar la base de datos y crear el primer usuario 
 
 ### Editar un proveedor
 * Metodo: POST
-* Endpoint: /proveedores/editar/<id_proveedores>
+* Endpoint: ```/proveedores/editar/<id_proveedores>```
 * Ejemplo solicitud
 ```json
     {
@@ -327,7 +327,7 @@ Este script es necesario para poblar la base de datos y crear el primer usuario 
 
 ### Eliminar un proveedor
 * Metodo: POST
-* Endpoint: /proveedores/eliminar/<id_proveedor>
+* Endpoint: ```/proveedores/eliminar/<id_proveedor>```
 * Respuesta esperada:
 ```json
 {
@@ -344,8 +344,8 @@ Este script es necesario para poblar la base de datos y crear el primer usuario 
 ```json
 "usuarios": [
         {
-            "nombre_usuario": usuario1,
-            "contrasena_hash": scrypt:32768:8:1$Opoq98bkASq4idt1$67bdbb5fb7b991ddc0ca3967...,
+            "nombre_usuario": "usuario1",
+            "contrasena_hash": "scrypt:32768:8:1$Opoq98bkASq4idt1$67bdbb5fb7b991ddc0ca3967...",
             "is_admin": "True",
         },
 ```
@@ -357,8 +357,8 @@ Este script es necesario para poblar la base de datos y crear el primer usuario 
 * Ejemplo de solicitud:
 ```json
     {
-        "nombre_usuario": 2543543,
-        "contrasena": 32132321,
+        "nombre_usuario": "usuario",
+        "contrasena": "32132321",
         "is_admin": True o False
     }
 ```
