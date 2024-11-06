@@ -1,10 +1,8 @@
 from urllib import request
 
-from sqlalchemy import except_
-
 from app import db
 from models import Empleado, Sucursal
-from flask import Blueprint, render_template, redirect, url_for, request, jsonify
+from flask import Blueprint, request, jsonify
 
 from schemas import EmpleadoSchema, SucursalSchema
 
@@ -23,64 +21,61 @@ def empleado():
 
 @empleado_bp.route("/empleados/crear", methods=['POST'])
 def crear_empleado():
-    nombre = request.form.get('nombre')
-    dni = request.form.get('dni')
-    telefono = request.form.get('telefono')
-    direccion = request.form.get('direccion')
-    email = request.form.get('email')
-    cargo = request.form.get('cargo')
-    sucursal_id = request.form.get('sucursal')
+    datos = request.json
 
-    if nombre and dni and telefono and direccion and email and cargo and sucursal_id:
-        try:
-            nuevo_empleado = Empleado(
-                nombre=nombre,
-                dni=dni,
-                telefono=telefono,
-                direccion=direccion,
-                email=email,
-                cargo=cargo,
-                sucursal_id=sucursal_id
-            )
+    if datos:
+        nombre = datos.get("nombre")
+        dni = datos.get("dni")
+        sucursal_id = datos.get("sucursal_id")
+        cargo = datos.get("cargo")
+        telefono = datos.get("telefono")
+        email = datos.get("email")
+        direccion = datos.get("direccion")
 
-            db.session.add(nuevo_empleado)
-            db.session.commit()
-
-        except except_() as error:
-            print(f'ERROR EN LA BD:{error}')
-
-        finally:
-            return redirect(url_for('empleado.empleado'))
+        nuevo_empleado = Empleado(
+            nombre=nombre,
+            dni=dni,
+            sucursal_id=sucursal_id,
+            cargo=cargo,
+            telefono=telefono,
+            email=email,
+            direccion=direccion
+        )
+        db.session.add(nuevo_empleado)
+        db.session.commit()
+        return jsonify({'Mensaje': 'Empleado cargado con exito.'})
 
     else:
-        print('Debes completar todos los datos del formulario.')
+        return jsonify({'Mensaje': 'Error al cargar el nuevo empleado'})
 
 
 @empleado_bp.route("/empleados/editar/<int:id>", methods=['GET','POST'])
 def editar_empleado(id):
-    empleado = Empleado.query.filter_by(id=id).first()
-    empleado_serializer = EmpleadoSchema().dump(empleado)
-    if request.method == 'GET':
-        sucursales = Sucursal.query.all()
-        sucursales_serializer = SucursalSchema(many=True).dump(sucursales)
-        return render_template('empleados/editar_empleado.html', empleado=empleado_serializer, sucursales=sucursales_serializer)
+    empleado = Empleado.query.get_or_404(id)
+
+    if request.method == "GET":
+        return jsonify(EmpleadoSchema().dump(empleado))
 
     else:
-        empleado.nombre = request.form.get('nombre')
-        empleado.dni = request.form.get('dni')
-        empleado.telefono = request.form.get('telefono')
-        empleado.direccion = request.form.get('direccion')
-        empleado.email = request.form.get('email')
-        empleado.cargo = request.form.get('cargo')
-        empleado.sucursal_id = request.form.get('sucursal')
+        datos = request.json
+        if datos:
+            empleado.nombre = datos.get("nombre")
+            empleado.sucursal_id = datos.get("sucursal_id")
+            empleado.cargo = datos.get("cargo")
+            empleado.dni = datos.get("dni")
+            empleado.telefono = datos.get("telefono")
+            empleado.email = datos.get("email")
+            empleado.direccion = datos.get("direccion")
 
-        db.session.commit()
+            db.session.commit()
+            return jsonify({'Mensaje': 'Empleado actualizado con exito.'})
 
-        return redirect(url_for('empleado.empleado'))
+        else:
+            return jsonify({'Mensaje': 'Error al actualizar el empleado.'})
 
 @empleado_bp.route("/empleados/delete/<int:id>", methods=['GET','POST'])
 def eliminar_empleado(id):
     empleado = Empleado.query.filter_by(id=id).first()
     db.session.delete(empleado)
     db.session.commit()
-    return redirect(url_for('empleado.empleado'))
+    return jsonify({'Mensaje': 'Empleado eliminado con exito.'})

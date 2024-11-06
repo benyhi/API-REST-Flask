@@ -1,5 +1,4 @@
 from marshmallow_sqlalchemy import auto_field
-from wtforms.validators import length
 
 from app import ma
 from marshmallow import validates, ValidationError
@@ -91,7 +90,6 @@ class ClienteSchema(ma.SQLAlchemySchema):
     direccion = ma.auto_field()
     telefono = ma.auto_field()
     email = ma.auto_field()
-    usuario_id = ma.Nested(UsuarioSchema, only=('nombre_usuario',))
 
 class EmpleadoSchema(ma.SQLAlchemySchema):
     class Meta:
@@ -100,7 +98,7 @@ class EmpleadoSchema(ma.SQLAlchemySchema):
     id = auto_field()
     nombre = ma.auto_field()
     dni = ma.auto_field()
-    sucursal_id = ma.Nested(SucursalSchema, only=('id','nombre'))
+    sucursal = ma.Nested(SucursalSchema, only=('id', 'nombre'))
     cargo = ma.auto_field()
 
 class ProveedorSchema(ma.SQLAlchemySchema):

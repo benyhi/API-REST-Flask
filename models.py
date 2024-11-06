@@ -54,7 +54,6 @@ class Persona(db.Model):
 class Cliente(Persona):
     __tablename__ = 'cliente'
     id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
-    usuario_id = db.Column(db.Integer, nullable=False)
 
     __mapper_args__ = {
         'polymorphic_identity': 'cliente',

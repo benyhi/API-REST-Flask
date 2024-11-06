@@ -84,9 +84,11 @@ def primer_usuario():
         else:
             primer_usuario = Usuario(
                 nombre_usuario = "admin",
-                contrasena_hash = generate_password_hash("admin"),
+                contrasena_hash = generate_password_hash("123"),
                 is_admin = True,
             )
+            print(primer_usuario.nombre_usuario, primer_usuario.contrasena_hash, primer_usuario.is_admin)
+
             db.session.add(primer_usuario)
             db.session.commit()
             db.session.close()

@@ -1,5 +1,5 @@
 from datetime import timedelta
-from flask import Blueprint, render_template, redirect, url_for, request, jsonify
+from flask import Blueprint, request, jsonify
 
 from flask_jwt_extended import (
     create_access_token,
@@ -23,14 +23,14 @@ def login():
     data = request.authorization
     nombre_usuario = data.username
     contrasena = data.password
-    print(nombre_usuario, contrasena)
     usuario = Usuario.query.filter_by(nombre_usuario=nombre_usuario).first()
 
     if usuario and check_password_hash(usuario.contrasena_hash, contrasena):
         access_token = create_access_token(
             identity=nombre_usuario,
             expires_delta=timedelta(minutes=60),
-            additional_claims=dict(usuario.is_admin))
+            additional_claims={"is_admin": usuario.is_admin}
+        )
 
         return jsonify({'Token': access_token})
 
@@ -39,14 +39,15 @@ def login():
 
 
 @auth_bp.route('/usuarios', methods=['GET', 'POST'])
-@jwt_required
+@jwt_required()
 def usuarios():
     data_jwt = get_jwt()
-    administrador = data_jwt.get('administrador')
+    print(data_jwt)
+    administrador = data_jwt.get('is_admin')
 
     if request.method == 'POST':
         if administrador is True:
-            data = request.json()
+            data = request.json
             nombre_usuario = data['nombre_usuario']
             contrasena = data['contrasena']
 
@@ -58,10 +59,10 @@ def usuarios():
                 )
                 db.session.add(nuevo_usuario)
                 db.session.commit()
-                return jsonify({'Mensaje':'Usuario creado exitosamente', 'Usuario':nuevo_usuario})
+                return jsonify({'Mensaje':'Usuario creado exitosamente'})
 
-            except:
-                return jsonify({'Mensaje':'El usuario ya existe'})
+            except Exception as e:
+                return jsonify({'Mensaje':'El usuario ya existe', 'Error': e})
 
         else:
             return jsonify({'Mensaje':'Solo el admin puede crear usuarios.'})
@@ -69,4 +70,7 @@ def usuarios():
     else:
         if administrador is True:
             usuarios = Usuario.query.all()
-            return UsuarioSchema(many=True).dump(usuarios)
+            usuarios_serializer = UsuarioSchema(many=True).dump(usuarios)
+            return jsonify(usuarios_serializer)
+        else:
+            return jsonify({'Mensaje':'No tienes permisos para hacer esta solicitud.'})
