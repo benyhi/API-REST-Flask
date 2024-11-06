@@ -4,16 +4,13 @@
 
 ### Crear el entorno virtual
 - ```python -m venv env```
-- 
 ### Activar el entorno virtual
 #### En Linux 
 - ```source env/bin/activate```
 #### En Windows
 - ```env\Scripts\activate.bat```
-- 
 ### Instalar librerias necesarias
 - ``` pip install -r requirements.txt```
-- 
 ### Crear variable de entorno
 1. Crear el archivo ".env" dentro directorio donde se clono el repositorio
 2. Dentro del archivo colocar las siguientes lineas:
