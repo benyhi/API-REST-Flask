@@ -76,7 +76,7 @@ def usuarios():
 
 @auth_bp.route('/usuarios/eliminar/<int:id>', methods=['DELETE'])
 @jwt_required()
-def usuarios(id):
+def eliminar_usuario(id):
     data_jwt = get_jwt()
     administrador = data_jwt.get('is_admin')
 

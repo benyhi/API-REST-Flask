@@ -1,5 +1,3 @@
-from urllib import request
-
 from app import db
 from models import Empleado, Sucursal
 from flask import Blueprint, request, jsonify
