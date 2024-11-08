@@ -22,7 +22,8 @@ def productos():
 
 @productos_bp.route("/productos/crear", methods=['POST'])
 def crear_producto():
-    datos = request.json
+    datos = request.get_json()
+    print(datos)
 
     if datos:
         nombre = datos.get("nombre")
@@ -36,9 +37,9 @@ def crear_producto():
             nombre=nombre,
             precio=precio,
             stock=stock,
-            modelo_id=modelo_id,
-            categoria_id=categoria_id,
-            proveedor_id=proveedor_id
+            modelo_id=int(modelo_id),
+            categoria_id=int(categoria_id),
+            proveedor_id=int(proveedor_id)
         )
         db.session.add(nuevo_producto)
         db.session.commit()

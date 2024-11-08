@@ -20,9 +20,9 @@ auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
-    data = request.authorization
-    nombre_usuario = data.username
-    contrasena = data.password
+    data = request.get_json()
+    nombre_usuario = data['nombre_usuario']
+    contrasena = data['contrasena']
     usuario = Usuario.query.filter_by(nombre_usuario=nombre_usuario).first()
 
     if usuario and check_password_hash(usuario.contrasena_hash, contrasena):
@@ -70,7 +70,7 @@ def usuarios():
         if administrador is True:
             usuarios = Usuario.query.all()
             usuarios_serializer = UsuarioSchema(many=True).dump(usuarios)
-            return jsonify(usuarios_serializer)
+            return jsonify({"usuarios":usuarios_serializer})
         else:
             return jsonify({'Mensaje':'No tienes permisos para hacer esta solicitud.'})
 

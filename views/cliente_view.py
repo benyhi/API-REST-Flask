@@ -9,7 +9,7 @@ clientes_bp = Blueprint('clientes', __name__)
 @clientes_bp.route("/clientes", methods=["GET"])
 def clientes():
     clientes = Cliente.query.all()
-    return jsonify(ClienteSchema(many=True).dump(clientes))
+    return jsonify({"clientes": ClienteSchema(many=True).dump(clientes)})
 
 @clientes_bp.route("/clientes/crear", methods=['POST'])
 def crear_cliente():

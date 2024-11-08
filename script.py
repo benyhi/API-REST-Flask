@@ -101,6 +101,5 @@ def primer_usuario():
             db.session.close()
 
 if __name__ == "__main__":
-    poblar_bd()
     primer_usuario()
 
