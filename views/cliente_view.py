@@ -11,6 +11,13 @@ def clientes():
     clientes = Cliente.query.all()
     return jsonify({"clientes": ClienteSchema(many=True).dump(clientes)})
 
+@clientes_bp.route("/clientes/<int:id>", methods=['GET'])
+def cliente(id):
+    cliente = Cliente.query.filter_by(id=id).first_or_404()
+    cliente_schema = ClienteSchema() # Esto esta asi porque tenia un error de missed obj al pasarle ClienteSchema en el return.
+    cliente_data = cliente_schema.dump(cliente)
+    return jsonify({"cliente": cliente_data})
+
 @clientes_bp.route("/clientes/crear", methods=['POST'])
 def crear_cliente():
     datos = request.json
@@ -58,9 +65,10 @@ def editar_cliente(id):
         else:
             return jsonify({'Mensaje': 'Error al actualizar el cliente.'})
 
-@clientes_bp.route("/clientes/delete/<int:id>", methods=['GET','POST'])
+
+@clientes_bp.route("/clientes/eliminar/<int:id>", methods=['DELETE'])
 def eliminar_cliente(id):
-    empleado = Cliente.query.get_or_404(id)
-    db.session.delete(empleado)
+    cliente = Cliente.query.get_or_404(id)
+    db.session.delete(cliente)
     db.session.commit()
-    return jsonify({'Mensaje': 'Cliente eliminado con exito.'})
+    return jsonify({'Mensaje': 'Cliente eliminado con exito.'}), 200

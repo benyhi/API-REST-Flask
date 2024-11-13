@@ -58,7 +58,7 @@ def usuarios():
                 )
                 db.session.add(nuevo_usuario)
                 db.session.commit()
-                return jsonify({'Mensaje':'Usuario creado exitosamente'})
+                return jsonify({'Mensaje':'Usuario creado exitosamente'}), 200
 
             except Exception as e:
                 return jsonify({'Mensaje':'El usuario ya existe', 'Error': e})
@@ -73,6 +73,28 @@ def usuarios():
             return jsonify({"usuarios":usuarios_serializer})
         else:
             return jsonify({'Mensaje':'No tienes permisos para hacer esta solicitud.'})
+
+@auth_bp.route('/usuarios/editar/<int:id>', methods=['GET','PUT'])
+@jwt_required()
+def editar_usuarios(id):
+    usuario = Usuario.query.get_or_404(id)
+
+    if request.method == 'GET':
+        return jsonify(UsuarioSchema().dump(usuario))
+    
+    else:
+        datos = request.json
+        if datos:
+            usuario.nombre_usuario = datos.get('nombre_usuario'),
+            usuario.contrasena_hash = generate_password_hash(datos.get('contrasena'))
+            usuario.is_admin = datos.get('is_admin')
+
+            db.session.commit()
+            db.session.close()
+            return jsonify({'Mensaje':'Usuario actualizado con exito.'}), 200
+        else:
+            return jsonify({'Mensaje':'Error al obtener el usuario.'})
+
 
 @auth_bp.route('/usuarios/eliminar/<int:id>', methods=['DELETE'])
 @jwt_required()
