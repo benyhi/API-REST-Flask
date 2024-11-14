@@ -1,17 +1,23 @@
 from app import db
 from models import Cliente
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import (
+    get_jwt,
+    jwt_required,
+)
 
 from schemas import ClienteSchema
 
 clientes_bp = Blueprint('clientes', __name__)
 
 @clientes_bp.route("/clientes", methods=["GET"])
+@jwt_required()
 def clientes():
     clientes = Cliente.query.all()
     return jsonify({"clientes": ClienteSchema(many=True).dump(clientes)})
 
 @clientes_bp.route("/clientes/<int:id>", methods=['GET'])
+@jwt_required()
 def cliente(id):
     cliente = Cliente.query.filter_by(id=id).first_or_404()
     cliente_schema = ClienteSchema() # Esto esta asi porque tenia un error de missed obj al pasarle ClienteSchema en el return.
@@ -19,6 +25,7 @@ def cliente(id):
     return jsonify({"cliente": cliente_data})
 
 @clientes_bp.route("/clientes/crear", methods=['POST'])
+@jwt_required()
 def crear_cliente():
     datos = request.json
 
@@ -43,7 +50,8 @@ def crear_cliente():
     else:
         return jsonify({'Mensaje': 'Error al cargar el nuevo cliente'})
 
-@clientes_bp.route("/clientes/editar/<int:id>", methods=['GET','POST'])
+@clientes_bp.route("/clientes/editar/<int:id>", methods=['GET','PUT'])
+@jwt_required()
 def editar_cliente(id):
     cliente = Cliente.query.get_or_404(id)
 
@@ -67,6 +75,7 @@ def editar_cliente(id):
 
 
 @clientes_bp.route("/clientes/eliminar/<int:id>", methods=['DELETE'])
+@jwt_required()
 def eliminar_cliente(id):
     cliente = Cliente.query.get_or_404(id)
     db.session.delete(cliente)

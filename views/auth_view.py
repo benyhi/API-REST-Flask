@@ -6,6 +6,7 @@ from flask_jwt_extended import (
     get_jwt,
     jwt_required,
 )
+
 from werkzeug.security import (
     generate_password_hash,
     check_password_hash
@@ -36,25 +37,35 @@ def login():
 
     return jsonify({'Mensaje':'El usuario o contraseña no coinciden.'})
 
-
-
-@auth_bp.route('/usuarios', methods=['GET', 'POST'])
+@auth_bp.route('/usuarios')
 @jwt_required()
 def usuarios():
     data_jwt = get_jwt()
     administrador = data_jwt.get('is_admin')
 
-    if request.method == 'POST':
-        if administrador is True:
-            data = request.json
-            nombre_usuario = data['nombre_usuario']
-            contrasena = data['contrasena']
+    if administrador is True:
+        usuarios = Usuario.query.all()
+        usuarios_serializer = UsuarioSchema(many=True).dump(usuarios)
+        return jsonify({"usuarios":usuarios_serializer})
+    else:
+        return jsonify({'Mensaje':"Se requieren permisos de administrador para ejecutar esta accion."})
 
+@auth_bp.route('/usuarios/crear', methods=['POST'])
+@jwt_required()
+def crear_usuario():
+    data_jwt = get_jwt()
+    administrador = data_jwt.get('is_admin')
+
+    if administrador is True:
+        data = request.get_json()
+        print(data)
+
+        if data:
             try:
                 nuevo_usuario= Usuario(
-                    nombre_usuario=nombre_usuario,
-                    contrasena_hash=generate_password_hash(contrasena),
-                    is_admin=False
+                    nombre_usuario= data['nombre_usuario'],
+                    contrasena_hash= generate_password_hash(data['contrasena']),
+                    is_admin= data['is_admin']
                 )
                 db.session.add(nuevo_usuario)
                 db.session.commit()
@@ -63,38 +74,40 @@ def usuarios():
             except Exception as e:
                 return jsonify({'Mensaje':'El usuario ya existe', 'Error': e})
 
-        else:
-            return jsonify({'Mensaje':'Solo el admin puede crear usuarios.'})
-
     else:
-        if administrador is True:
-            usuarios = Usuario.query.all()
-            usuarios_serializer = UsuarioSchema(many=True).dump(usuarios)
-            return jsonify({"usuarios":usuarios_serializer})
-        else:
-            return jsonify({'Mensaje':'No tienes permisos para hacer esta solicitud.'})
-
+        return jsonify({'Mensaje':"Se requieren permisos de administrador para ejecutar esta accion."})
+        
 @auth_bp.route('/usuarios/editar/<int:id>', methods=['GET','PUT'])
 @jwt_required()
 def editar_usuarios(id):
+    data_jwt = get_jwt()
+    administrador = data_jwt.get('is_admin')
     usuario = Usuario.query.get_or_404(id)
 
-    if request.method == 'GET':
-        return jsonify(UsuarioSchema().dump(usuario))
-    
-    else:
-        datos = request.json
-        if datos:
-            usuario.nombre_usuario = datos.get('nombre_usuario'),
-            usuario.contrasena_hash = generate_password_hash(datos.get('contrasena'))
-            usuario.is_admin = datos.get('is_admin')
-
-            db.session.commit()
-            db.session.close()
-            return jsonify({'Mensaje':'Usuario actualizado con exito.'}), 200
+    if administrador is True:
+        if request.method == 'GET':
+            return jsonify(UsuarioSchema().dump(usuario))
+        
         else:
-            return jsonify({'Mensaje':'Error al obtener el usuario.'})
+            datos = request.get_json()
+            print(datos)
+            if datos:
+                if 'nombre_usuario' in datos:
+                    usuario.nombre_usuario = datos.get('nombre_usuario')
 
+                if 'contrasena' in datos and check_password_hash(usuario.contrasena_hash, 'contrsena') == False:
+                    usuario.contrasena_hash = generate_password_hash(datos.get('contrasena'))
+
+                if 'is_admin' in datos:
+                    usuario.is_admin = datos.get('is_admin')
+
+                db.session.commit()
+                db.session.close()
+                return jsonify({'Mensaje':'Usuario actualizado con exito.'}), 200
+            else:
+                return jsonify({'Mensaje':'Error al obtener el usuario.'})
+    else:
+        return jsonify({"Mensaje":"Se requieren permisos de administrador para ejecutar esta accion."})
 
 @auth_bp.route('/usuarios/eliminar/<int:id>', methods=['DELETE'])
 @jwt_required()
@@ -109,4 +122,4 @@ def eliminar_usuario(id):
         return jsonify({'Mensaje':'Usuario eliminado exitosamente'})
 
     else:
-        jsonify({"Mensaje":"Tiene que ser admin para hacer esta solicitud."})
+        jsonify({"Mensaje":"Se requieren permisos de administrador para ejecutar esta accion."})

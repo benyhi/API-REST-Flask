@@ -100,6 +100,8 @@ def primer_usuario():
             db.session.commit()
             db.session.close()
 
+    print("Registros insertados exitosamente.")
+    
 if __name__ == "__main__":
+    poblar_bd()
     primer_usuario()
-
